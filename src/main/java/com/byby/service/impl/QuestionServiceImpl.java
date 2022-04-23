@@ -1,17 +1,25 @@
 package com.byby.service.impl;
 
+import com.byby.dto.mapper.QuestionMapper;
 import com.byby.dto.model.QuestionDto;
 
 import static com.byby.dto.mapper.QuestionMapper.*;
 
+import com.byby.integration.JServiceRestClient;
 import com.byby.repository.QuestionRepository;
 import com.byby.repository.entity.Question;
 import com.byby.service.QuestionService;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Optional.*;
+
 import java.util.Random;
 
 @ApplicationScoped
@@ -21,12 +29,37 @@ public class QuestionServiceImpl implements QuestionService {
     @Inject
     QuestionRepository questionRepository;
 
+    @Inject
+    @RestClient
+    JServiceRestClient jServiceRestClient;
+
+    Random random;
+
+    @PostConstruct
+    public void init() {
+        random = new Random();
+    }
+
     @Override
     public QuestionDto getRandom() {
+        return random.nextBoolean() ? getLocalRandom() : getExternalRandom();
+    }
+
+    private QuestionDto getLocalRandom() {
         List<Question> questionsAll = questionRepository.listAll();
-        Integer randomIndex = new Random().nextInt(questionsAll.size());
+        Integer randomIndex = random.nextInt(questionsAll.size());
         Question question = questionsAll.get(randomIndex);
         return toDto(question);
+    }
+
+    private QuestionDto getExternalRandom() {
+        return ofNullable(jServiceRestClient.getRandom())
+                .orElse(Collections.emptyList())
+                .stream()
+                .findFirst()
+                .map(QuestionMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Not found external random question"))
+                ;
     }
 
 

@@ -14,12 +14,11 @@ public class Answer {
     private String value;
 
     @Column
-    private
-    boolean isCorrect;
+    private boolean isCorrect;
 
     @ManyToOne
-    private
-    Question question;
+    @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name = "question_id_fk"))
+    private Question question;
 
     public Long getId() {
         return id;

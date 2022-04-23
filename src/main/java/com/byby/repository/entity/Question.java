@@ -15,12 +15,12 @@ public class Question {
     @Column(length = 200)
     private String question;
 
-    @ManyToOne(targetEntity = Category.class)
+    @ManyToOne
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "category_id_fk"))
     private Category category;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private
-    List<Answer> answers;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "question")
+    private List<Answer> answers;
 
     @Column
     private Integer difficulty;

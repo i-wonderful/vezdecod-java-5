@@ -15,7 +15,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
 private static Logger LOG = Logger.getLogger(RuntimeExceptionMapper.class.getName());
     @Override
     public Response toResponse(RuntimeException e) {
-        LOG.log(Level.ERROR,String.format(">>> Runtime exception. %s", e.getMessage()));
+        LOG.log(Level.ERROR,String.format(">>> Runtime exception. %s", e.getMessage()), e);
 
         return Response.status(500)
                 .entity(new ResponseDto(INTERNAL_ERROR, e.getMessage(), null))
