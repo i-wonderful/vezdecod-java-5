@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CheckResponse implements ResponseResultDto {
     private Long questionId;
-
     private boolean isCorrect;
-
     private String correctAnswer;
 
     @JsonProperty("question_id")

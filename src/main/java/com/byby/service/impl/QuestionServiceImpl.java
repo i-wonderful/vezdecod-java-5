@@ -16,17 +16,15 @@ import java.util.Random;
 
 @ApplicationScoped
 public class QuestionServiceImpl implements QuestionService {
-    private static final Logger logger = Logger.getLogger(QuestionServiceImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(QuestionServiceImpl.class.getName());
 
     @Inject
     QuestionRepository questionRepository;
-
 
     @Override
     public QuestionDto getRandom() {
         List<Question> questionsAll = questionRepository.listAll();
         Integer randomIndex = new Random().nextInt(questionsAll.size());
-        logger.info(">>> RandomIndex = " + randomIndex);
         Question question = questionsAll.get(randomIndex);
         return toDto(question);
     }

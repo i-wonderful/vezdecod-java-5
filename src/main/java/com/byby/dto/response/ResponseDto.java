@@ -43,7 +43,7 @@ public class ResponseDto {
         this.result = result;
     }
 
-    public static enum ResponseCode {
+    public enum ResponseCode {
         OK,
         VALIDATION_ERROR,
         INTERNAL_ERROR
