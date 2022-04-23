@@ -1,12 +1,16 @@
 package com.byby.dto.model;
 
 import com.byby.dto.response.ResponseResultDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class QuestionDto implements ResponseResultDto {
     private Long id;
     private String question;
     private CategoryDto category;
     private Integer difficulty;
+    @JsonIgnore
+    private String answer;
 
     public Long getId() {
         return id;
@@ -38,5 +42,22 @@ public class QuestionDto implements ResponseResultDto {
 
     public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionDto{" +
+                "id=" + id +
+                ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
     }
 }

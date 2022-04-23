@@ -1,44 +1,32 @@
 package com.byby.service.impl;
 
+import com.byby.cache.CacheManager;
+import com.byby.dto.model.QuestionDto;
 import com.byby.dto.request.CheckRequest;
 import com.byby.dto.response.CheckResponse;
-import com.byby.repository.AnswerRepository;
-import com.byby.repository.entity.Answer;
 import com.byby.service.AnswerService;
+import org.jboss.logmanager.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Objects;
+
+import static com.byby.dto.mapper.QuestionMapper.toCheckResponse;
 
 @ApplicationScoped
 public class AnswerServiceImpl implements AnswerService {
+    private static Logger LOG = Logger.getLogger(AnswerServiceImpl.class.getName());
+
     @Inject
-    AnswerRepository answerRepository;
+    CacheManager cacheManager;
 
     @Override
     public CheckResponse check(CheckRequest checkRequest) {
         Long questionId = checkRequest.getQuestionId();
-        List<Answer> answers = answerRepository.findAnswerByQuestionId(questionId);
+        String answer = checkRequest.getAnswer();
 
-        CheckResponse response = new CheckResponse();
-        response.setCorrect(isCorrect(checkRequest.getAnswer(), answers));
-        response.setCorrectAnswer(getCorrectAnswer(answers));
-        response.setQuestionId(questionId);
-        return response;
+        QuestionDto questionCache = cacheManager.getFromCacheOrDb(questionId);
+
+        return toCheckResponse(questionCache, answer);
     }
 
-    private boolean isCorrect(String answerValueCheck, List<Answer> answers) {
-        return answers.stream()
-                .filter(a -> Objects.equals(answerValueCheck, a.getValue()))
-                .map(Answer::isCorrect)
-                .findFirst().orElse(false);
-    }
-
-    private String getCorrectAnswer(List<Answer> answers){
-        return answers.stream()
-                .filter(Answer::isCorrect)
-                .map(Answer::getValue)
-                .findFirst().orElseThrow(() -> new RuntimeException("Not found right answer"));
-    }
 }

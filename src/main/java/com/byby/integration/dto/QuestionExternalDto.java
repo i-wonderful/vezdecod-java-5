@@ -3,6 +3,7 @@ package com.byby.integration.dto;
 public class QuestionExternalDto {
     private Long id;
     private String question;
+    private String answer;
     private Integer value;
     private CategoryExternalDto category;
 
@@ -36,5 +37,13 @@ public class QuestionExternalDto {
 
     public void setCategory(CategoryExternalDto category) {
         this.category = category;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

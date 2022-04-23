@@ -1,5 +1,6 @@
 package com.byby.service.impl;
 
+import com.byby.cache.CacheManager;
 import com.byby.dto.mapper.QuestionMapper;
 import com.byby.dto.model.QuestionDto;
 
@@ -24,7 +25,7 @@ import java.util.Random;
 
 @ApplicationScoped
 public class QuestionServiceImpl implements QuestionService {
-    private static final Logger LOGGER = Logger.getLogger(QuestionServiceImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(QuestionServiceImpl.class.getName());
 
     @Inject
     QuestionRepository questionRepository;
@@ -32,6 +33,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Inject
     @RestClient
     JServiceRestClient jServiceRestClient;
+
+    @Inject
+    CacheManager cacheManager;
 
     Random random;
 
@@ -42,7 +46,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionDto getRandom() {
-        return random.nextBoolean() ? getLocalRandom() : getExternalRandom();
+        QuestionDto questionDto = random.nextBoolean() ? getLocalRandom() : getExternalRandom();
+        cacheManager.put(questionDto.getId(), questionDto);
+        return questionDto;
     }
 
     private QuestionDto getLocalRandom() {
@@ -61,6 +67,5 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new RuntimeException("Not found external random question"))
                 ;
     }
-
 
 }

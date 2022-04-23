@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.byby</groupId>
-  <artifactId>vezdecod-java-2</artifactId>
+  <artifactId>vezdecod-java-3</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -76,6 +76,13 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-jackson</artifactId>
     </dependency>
+
+    <!-- Cache -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-cache</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>

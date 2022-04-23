@@ -1,14 +1,14 @@
-# vezdecod-java-2 Project
+# vezdecod-java-3 Project
 
-    Этот мкс для задания 2 java.
+    Этот мкс для задания 3 java.
     Написан на quarkus.
     Используется postgres, hibernate, классический rest.
     Для удобства проверки и наглядности добавлен сваггер.
 
 - [Текст задания](https://vk.com/@vezdekod-java-23181)
-- [Github](https://github.com/i-wonderful/vezdecod-java-2)
-- [Запущен на heroku](https://vezdecod-java-2.herokuapp.com)
-- [SwaggerUI на heroku](https://vezdecod-java-2.herokuapp.com/swagger-ui/)
+- [Github](https://github.com/i-wonderful/vezdecod-java-3)
+- [Запущен на heroku](https://vezdecod-java-3.herokuapp.com)
+- [SwaggerUI на heroku](https://vezdecod-java-3.herokuapp.com/swagger-ui/)
 
 
 ## Сборка и Запуск
