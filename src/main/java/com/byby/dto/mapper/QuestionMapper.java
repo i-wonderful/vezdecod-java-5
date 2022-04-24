@@ -5,9 +5,7 @@ import com.byby.dto.model.QuestionDto;
 import com.byby.dto.response.CheckResponse;
 import com.byby.integration.dto.CategoryExternalDto;
 import com.byby.integration.dto.QuestionExternalDto;
-import com.byby.repository.entity.Answer;
-import com.byby.repository.entity.Category;
-import com.byby.repository.entity.Question;
+import com.byby.repository.entity.*;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,11 +43,21 @@ public class QuestionMapper {
     }
 
     public static CheckResponse toCheckResponse(QuestionDto dto, String answer) {
-        if (dto == null) return null;
+        if (dto == null || answer == null) return null;
         CheckResponse response = new CheckResponse();
         response.setCorrect(Objects.equals(dto.getAnswer(), answer));
         response.setCorrectAnswer(dto.getAnswer());
         response.setQuestionId(dto.getId());
+        return response;
+    }
+
+    public static CheckResponse toCheckResponse(Question question, String answer) {
+        if (question == null || answer == null) return null;
+        String rightAnswer = getRightAnswer(question);
+        CheckResponse response = new CheckResponse();
+        response.setCorrect(Objects.equals(rightAnswer, answer));
+        response.setCorrectAnswer(rightAnswer);
+        response.setQuestionId(question.getId());
         return response;
     }
 
@@ -59,6 +67,16 @@ public class QuestionMapper {
         dto.setId(externalDto.getId());
         dto.setName(externalDto.getTitle());
         return dto;
+    }
+
+    public static UserAnswer toUserAnswerEntity(Game game, Question question, Object answer) {
+        if (game == null || question == null || answer == null) return null;
+
+        UserAnswer entity = new UserAnswer();
+        entity.setCorrect(Objects.equals(getRightAnswer(question), answer));
+        entity.setQuestion(question);
+        entity.setGame(game);
+        return entity;
     }
 
     private static String getRightAnswer(Question entity) {

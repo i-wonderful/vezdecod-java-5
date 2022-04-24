@@ -16,6 +16,7 @@ import org.jboss.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +43,15 @@ public class QuestionServiceImpl implements QuestionService {
     @PostConstruct
     public void init() {
         random = new Random();
+    }
+
+    @Override
+    public List<Question> getQuestions(int minDifficulty, int maxDifficulty, int limit, List<Long> categories) {
+        if (categories != null && !categories.isEmpty()) {
+            return questionRepository.findQuestionsByDifficultyAndCategories(minDifficulty, maxDifficulty, categories, limit);
+        } else {
+            return questionRepository.findQuestionsByDifficulty(minDifficulty, maxDifficulty, limit);
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.byby.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 
 public class CheckRequest {
     @JsonProperty("question_id")
