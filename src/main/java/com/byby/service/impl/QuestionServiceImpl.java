@@ -7,6 +7,7 @@ import com.byby.dto.model.QuestionDto;
 import static com.byby.dto.mapper.QuestionMapper.*;
 
 import com.byby.integration.JServiceRestClient;
+import com.byby.integration.dto.QuestionExternalDto;
 import com.byby.repository.QuestionRepository;
 import com.byby.repository.entity.Question;
 import com.byby.service.QuestionService;
@@ -23,6 +24,7 @@ import java.util.List;
 import static java.util.Optional.*;
 
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class QuestionServiceImpl implements QuestionService {
@@ -38,15 +40,30 @@ public class QuestionServiceImpl implements QuestionService {
     @Inject
     CacheManager cacheManager;
 
-    Random random;
-
-    @PostConstruct
-    public void init() {
-        random = new Random();
-    }
+    @Inject
+    RandomManager randomManager;
 
     @Override
-    public List<Question> getQuestions(int minDifficulty, int maxDifficulty, int limit, List<Long> categories) {
+    public List<Question> getQuestionsForGame(int minDifficulty, int maxDifficulty, int limit, List<Long> categories) {
+        List<Question> questions = getQuestionsFromDb(minDifficulty, maxDifficulty, limit, categories);
+        if (questions.size() < limit) {
+            int needQuestionsCount = limit - questions.size();
+            LOG.info(String.format(">>> We need more questions. Found: %d, need: %d. Lets get %d external questions",
+                    questions.size(), limit, needQuestionsCount));
+
+            List<QuestionDto> questionDtos = getQuestionExternal(minDifficulty, maxDifficulty, needQuestionsCount, categories);
+            LOG.info(">>> Get questions from external");
+
+            List<Question> questionFromExternal = saveQuestions(questionDtos);
+            LOG.info(">>> Save questions");
+
+            questions.addAll(questionFromExternal);
+        }
+
+        return questions;
+    }
+
+    private List<Question> getQuestionsFromDb(int minDifficulty, int maxDifficulty, int limit, List<Long> categories) {
         if (categories != null && !categories.isEmpty()) {
             return questionRepository.findQuestionsByDifficultyAndCategories(minDifficulty, maxDifficulty, categories, limit);
         } else {
@@ -54,16 +71,37 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    private List getQuestionExternal(int minDifficulty, int maxDifficulty, int count, List<Long> categories) {
+        List<QuestionExternalDto> questions = jServiceRestClient.getAll();
+        // todo categories filter
+        return questions.stream()
+                .filter(q -> q.getValue() != null)
+                .filter(q -> q.getValue() < maxDifficulty)
+                .filter(q -> q.getValue() > minDifficulty)
+                .limit(count)
+                .map(QuestionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<Question> saveQuestions(List<QuestionDto> questionDtos) {
+        List<Question> entities = questionDtos.stream()
+                .map(QuestionMapper::toEntity)
+                .collect(Collectors.toList());
+
+        questionRepository.persist(entities);
+        return entities;
+    }
+
     @Override
     public QuestionDto getRandom() {
-        QuestionDto questionDto = random.nextBoolean() ? getLocalRandom() : getExternalRandom();
+        QuestionDto questionDto = randomManager.getLocal() ? getLocalRandom() : getExternalRandom();
         cacheManager.put(questionDto.getId(), questionDto);
         return questionDto;
     }
 
     private QuestionDto getLocalRandom() {
         List<Question> questionsAll = questionRepository.listAll();
-        Integer randomIndex = random.nextInt(questionsAll.size());
+        int randomIndex = randomManager.nextInt(questionsAll.size());
         Question question = questionsAll.get(randomIndex);
         return toDto(question);
     }

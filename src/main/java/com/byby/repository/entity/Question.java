@@ -15,11 +15,11 @@ public class Question {
     @Column(length = 200)
     private String question;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "category_id_fk"))
     private Category category;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "question")
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "question")
     private List<Answer> answers;
 
     @Column

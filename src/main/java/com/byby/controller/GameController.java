@@ -1,11 +1,8 @@
 package com.byby.controller;
 
-import com.byby.dto.model.QuestionDto;
 import com.byby.dto.request.GameCheckRequest;
 import com.byby.dto.request.NewGameRequest;
-import com.byby.dto.response.CheckResponse;
-import com.byby.dto.response.GameFinish;
-import com.byby.dto.response.NewGameResponse;
+import com.byby.dto.response.*;
 import com.byby.service.GameService;
 
 import javax.inject.Inject;
@@ -22,27 +19,28 @@ public class GameController {
     GameService gameService;
 
     @POST
-    public NewGameResponse newGame(NewGameRequest newGameRequest) {
-        return gameService.create(newGameRequest);
+    public ResponseDto newGame(NewGameRequest newGameRequest) {
+        return new ResponseDto(gameService.create(newGameRequest));
     }
 
     @GET
     @Path("/{game_id}/{question_number}")
-    public QuestionDto getQuestion(@PathParam("game_id") Long gameId, @PathParam("question_number") Integer questionNumber) {
-        return gameService.getQuestion(gameId, questionNumber);
+    public ResponseDto getQuestion(@PathParam("game_id") Long gameId, @PathParam("question_number") Integer questionNumber) {
+        return new ResponseDto(gameService.getQuestion(gameId, questionNumber));
     }
 
     @POST
     @Path("/{game_id}/{question_number}/check")
-    public CheckResponse check(@PathParam("game_id") Long gameId,
+    public ResponseDto check(@PathParam("game_id") Long gameId,
                                @PathParam("question_number") Integer questionNumber,
                                GameCheckRequest checkRequest) {
-        return gameService.check(gameId, questionNumber, checkRequest);
+        return new ResponseDto(gameService.check(gameId, questionNumber, checkRequest));
     }
 
     @POST
     @Path("/{game_id}/finish")
-    public List<GameFinish> finish(@PathParam("game_id") Long gameId){
-       return gameService.finish(gameId);
+    public ResponseDto finish(@PathParam("game_id") Long gameId){
+       List<GameFinish> finishes = gameService.finish(gameId);
+       return new ResponseDto(new ResponseDto.ListResponseWrapper(finishes));
     }
 }

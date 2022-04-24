@@ -7,9 +7,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import java.util.List;
 
-@Path("/random")
-@RegisterRestClient(configKey="jservice.restclient.config" )
+@RegisterRestClient(configKey = "jservice.restclient.config")
 public interface JServiceRestClient {
     @GET
+    @Path("/random")
     List<QuestionExternalDto> getRandom();
+
+    @GET
+    @Path("/clues")
+    List<QuestionExternalDto> getAll();
 }

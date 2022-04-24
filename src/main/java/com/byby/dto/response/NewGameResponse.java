@@ -1,10 +1,10 @@
 package com.byby.dto.response;
 
-public class NewGameResponse {
+public class NewGameResponse implements ResponseResultDto{
     private Long id;
     private Integer countQuestions;
 
-    public NewGameResponse(Long id, Integer countQuestions){
+    public NewGameResponse(Long id, Integer countQuestions) {
         this.setId(id);
         this.setCountQuestions(countQuestions);
     }

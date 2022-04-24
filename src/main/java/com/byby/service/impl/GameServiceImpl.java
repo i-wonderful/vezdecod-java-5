@@ -41,7 +41,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public NewGameResponse create(NewGameRequest newGame) {
         // todo add validation
-        List<Question> questions = questionService.getQuestions(
+        List<Question> questions = questionService.getQuestionsForGame(
                 newGame.getMinDifficulty(),
                 newGame.getMaxDifficulty(),
                 newGame.getCountQuestions() -1,
@@ -54,7 +54,6 @@ public class GameServiceImpl implements GameService {
         return new NewGameResponse(entity.getId(), entity.getQuestions().size());
     }
 
-    // todo add cache and remote questions
     @Override
     public QuestionDto getQuestion(Long gameId, Integer questionNumber) {
         Game game = getGame(gameId);

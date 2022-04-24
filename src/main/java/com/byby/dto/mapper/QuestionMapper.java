@@ -7,6 +7,7 @@ import com.byby.integration.dto.CategoryExternalDto;
 import com.byby.integration.dto.QuestionExternalDto;
 import com.byby.repository.entity.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,31 @@ public class QuestionMapper {
         dto.setId(externalDto.getId());
         dto.setName(externalDto.getTitle());
         return dto;
+    }
+
+    public static Question toEntity(QuestionDto dto) {
+        if (dto == null) return null;
+        Question entity = new Question();
+        entity.setQuestion(dto.getQuestion());
+        entity.setDifficulty(dto.getDifficulty());
+        entity.setCategory(toEntity(dto.getCategory()));
+        entity.setAnswers(List.of(toEntity(dto.getAnswer(), entity)));
+
+        return entity;
+    }
+
+    public static Category toEntity(CategoryDto dto) {
+        Category entity = new Category();
+        entity.setName(dto.getName());
+        return entity;
+    }
+
+    public static Answer toEntity(String answerText, Question question) {
+        Answer entity = new Answer();
+        entity.setValue(answerText);
+        entity.setCorrect(true);
+        entity.setQuestion(question);
+        return entity;
     }
 
     public static UserAnswer toUserAnswerEntity(Game game, Question question, Object answer) {

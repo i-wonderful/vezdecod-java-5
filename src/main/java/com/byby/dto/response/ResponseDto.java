@@ -2,6 +2,9 @@ package com.byby.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ResponseDto {
     private ResponseCode code;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -11,6 +14,11 @@ public class ResponseDto {
     public ResponseDto(ResponseCode code, String description, ResponseResultDto result) {
         this.code = code;
         this.description = description;
+        this.result = result;
+    }
+
+    public ResponseDto(ResponseResultDto result) {
+        this.code = ResponseCode.OK;
         this.result = result;
     }
 
@@ -47,5 +55,12 @@ public class ResponseDto {
         OK,
         VALIDATION_ERROR,
         INTERNAL_ERROR
+    }
+
+    public static class ListResponseWrapper extends ArrayList implements ResponseResultDto {
+        public ListResponseWrapper(List value) {
+            super();
+            this.addAll(value);
+        }
     }
 }

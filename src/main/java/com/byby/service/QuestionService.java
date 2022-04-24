@@ -6,6 +6,6 @@ import com.byby.repository.entity.Question;
 import java.util.List;
 
 public interface QuestionService {
-    List<Question> getQuestions(int minDifficulty, int maxDifficulty, int limit, List<Long> categories);
+    List<Question> getQuestionsForGame(int minDifficulty, int maxDifficulty, int limit, List<Long> categories);
     QuestionDto getRandom();
 }
