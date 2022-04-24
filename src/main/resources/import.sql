@@ -3,7 +3,7 @@ VALUES (1, 'Main category');
 
 INSERT INTO public.question (id, difficulty, question, category_id)
 VALUES (1, 20, 'Третья планета от Солнца', 1),
-       (2, 30, 'Столица Мадагаскара', 1)
+       (2, 30, 'Столица Мадагаскара', 1),
        (3, 100, 'Главный вопрос жизни, вселенной, и вообще', 1);
 
 INSERT INTO public.answer (id, iscorrect, value, question_id)
