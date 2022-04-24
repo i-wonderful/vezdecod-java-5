@@ -1,5 +1,7 @@
 package com.byby.controller;
 
+import static com.byby.controller.validator.GameValidator.validateNewGame;
+
 import com.byby.dto.request.GameCheckRequest;
 import com.byby.dto.request.NewGameRequest;
 import com.byby.dto.response.*;
@@ -20,6 +22,7 @@ public class GameController {
 
     @POST
     public ResponseDto newGame(NewGameRequest newGameRequest) {
+        validateNewGame(newGameRequest);
         return new ResponseDto(gameService.create(newGameRequest));
     }
 
@@ -32,16 +35,16 @@ public class GameController {
     @POST
     @Path("/{game_id}/{question_number}/check")
     public ResponseDto check(@PathParam("game_id") Long gameId,
-                               @PathParam("question_number") Integer questionNumber,
-                               GameCheckRequest checkRequest) {
+                             @PathParam("question_number") Integer questionNumber,
+                             GameCheckRequest checkRequest) {
         // тут номер вопроса, а не айди, поэтому не может воспользоваться ранее написанным методом в AnswerService
         return new ResponseDto(gameService.check(gameId, questionNumber, checkRequest));
     }
 
     @POST
     @Path("/{game_id}/finish")
-    public ResponseDto finish(@PathParam("game_id") Long gameId){
-       List<GameFinish> finishes = gameService.finish(gameId);
-       return new ResponseDto(new ResponseDto.ListResponseWrapper(finishes));
+    public ResponseDto finish(@PathParam("game_id") Long gameId) {
+        List<GameFinish> finishes = gameService.finish(gameId);
+        return new ResponseDto(new ResponseDto.ListResponseWrapper(finishes));
     }
 }
