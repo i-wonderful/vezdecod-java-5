@@ -44,15 +44,15 @@ public class QuestionServiceImpl implements QuestionService {
     RandomManager randomManager;
 
     @Override
-    public List<Question> getQuestionsForGame(int minDifficulty, int maxDifficulty, int limit, List<Long> categories) {
-        List<Question> questions = getQuestionsFromDb(minDifficulty, maxDifficulty, limit, categories);
-        if (questions.size() < limit) {
-            int needQuestionsCount = limit - questions.size();
+    public List<Question> getQuestionsForGame(int minDifficulty, int maxDifficulty, int countQuestions, List<Long> categories) {
+        List<Question> questions = getQuestionsFromDb(minDifficulty, maxDifficulty, countQuestions - 1, categories);
+        if (questions.size() < countQuestions) {
+            int needQuestionsCount = countQuestions - questions.size();
             LOG.info(String.format(">>> We need more questions. Found: %d, need: %d. Lets get %d external questions",
-                    questions.size(), limit, needQuestionsCount));
+                    questions.size(), countQuestions, needQuestionsCount));
 
             List<QuestionDto> questionDtos = getQuestionExternal(minDifficulty, maxDifficulty, needQuestionsCount, categories);
-            LOG.info(">>> Get questions from external");
+            LOG.info(">>> Get questions from external, count: " + questionDtos.size());
 
             List<Question> questionFromExternal = saveQuestions(questionDtos);
             LOG.info(">>> Save questions");

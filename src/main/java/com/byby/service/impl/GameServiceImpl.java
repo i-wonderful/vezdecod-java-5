@@ -44,7 +44,7 @@ public class GameServiceImpl implements GameService {
         List<Question> questions = questionService.getQuestionsForGame(
                 newGame.getMinDifficulty(),
                 newGame.getMaxDifficulty(),
-                newGame.getCountQuestions() -1,
+                newGame.getCountQuestions(),
                 newGame.getCategories());
 
         Game entity = GameMapper.toEntity(newGame);

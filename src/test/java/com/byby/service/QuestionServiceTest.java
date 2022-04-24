@@ -3,7 +3,7 @@ package com.byby.service;
 import com.byby.dto.model.QuestionDto;
 import com.byby.repository.QuestionRepository;
 import com.byby.service.impl.RandomManager;
-import com.byby.service.resources.WireMockExtensions;
+import com.byby.mock.resources.WireMockExtensions;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;

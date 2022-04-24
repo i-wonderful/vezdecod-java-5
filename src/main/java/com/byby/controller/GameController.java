@@ -34,6 +34,7 @@ public class GameController {
     public ResponseDto check(@PathParam("game_id") Long gameId,
                                @PathParam("question_number") Integer questionNumber,
                                GameCheckRequest checkRequest) {
+        // тут номер вопроса, а не айди, поэтому не может воспользоваться ранее написанным методом в AnswerService
         return new ResponseDto(gameService.check(gameId, questionNumber, checkRequest));
     }
 

@@ -1,4 +1,4 @@
-package com.byby.service.resources;
+package com.byby.mock.resources;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;

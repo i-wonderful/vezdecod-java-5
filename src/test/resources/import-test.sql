@@ -18,3 +18,17 @@ VALUES (1, false, 'Венера', 1),
        (8, true, '42', 3),
        (9, false , '43', 3),
        (10, true, '0', 4);
+
+INSERT INTO public.game (id, maxdifficulty, mindifficulty)
+VALUES (1, 564, 2);
+
+INSERT INTO public.game_question (game_id, questions_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4);
+
+INSERT INTO public.user_answer ( id, iscorrect, game_id, question_id)
+VALUES ( 1, false , 1, 1 ),
+       ( 2, true , 1, 2 ),
+       ( 3, true , 1, 3 );
